@@ -1,25 +1,28 @@
 from TestRoot import AbstractTest
-from lazyflow.utility import Timer
 from PixelClassification import PixelClassification
+import perf
 
 class BenchmarkTest(AbstractTest):
-    def __init__(self):        
-        pass
+    def __init__(self,title="Untitled Test"):
+        self.test_title = title
 
     def run(self,callable_testobj):
-        with Timer() as testtimer:
-            callable_testobj()
-        print "Test {} took {} seconds".format(callable_testobj.name(),testtimer.seconds())
-
-	##TBD Add variables and methods to collect time for grpahical analysis
+        print("-------------------------------------------------------------")
+        print ("About to start benchmarking for " + self.test_title)
+        print("-------------------------------------------------------------")
+        runner = perf.Runner()
+        myb = runner.bench_func(self.test_title, callable_testobj)
+        myb.dump('saur.json',compact=False,replace=True)
+        print("-------------------------------------------------------------")
+        print("Finished benchmarking for " + self.test_title)
+        print("-------------------------------------------------------------")
 
 
 class PixelClassificationBM(BenchmarkTest):
-    def __init__(self):
-        BenchmarkTest.__init__(self)
+    def __init__(self,proj_path):
         self.testobj = PixelClassification()
+        BenchmarkTest.__init__(self,self.testobj.name)
+        self.testobj.setup_project(proj_path)
 
-    def run_test(self):
-	#TBD: Add provision to supply project path from outside
-        self.testobj.setup_project('/export/home/smehta/ilastik/projects/mitocheck_2d+t/pixelClassification.ilp')
+    def run(self):
         super(PixelClassificationBM,self).run(self.testobj)

@@ -23,6 +23,7 @@ class PixelClassification:
         self.workflow = None
         self.title = "PixelClassification Test"
 
+    @property
     def name(self):
         return self.title
 
