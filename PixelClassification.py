@@ -30,6 +30,9 @@ class PixelClassification:
     def setup_project(self,project_name):
         self.project = project_name
 
+    def setup_data(self,data_files):
+        self.data_files = data_files
+
     def __call__(self):
         if self.headless != True:
             print("Only headless mode is allowed in these tests")
@@ -44,6 +47,6 @@ class PixelClassification:
         fullscreen = self.fullscreen,headless=self.headless,logfile=self.logfile,new_project=self.new_project,
         playback_script=self.playback_script,playback_speed=self.playback_speed,process_name=self.process_name,project=self.project,readonly=self.readonly,redirect_output=self.redirect_output,start_recording=self.start_recording,workflow=self.workflow)
         
-        workflow_cmdline_args = ['--output_format=hdf5']
+        workflow_cmdline_args = self.data_files
 	
         ilastik_main.main(parsed_args, workflow_cmdline_args)
